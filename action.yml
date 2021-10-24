@@ -10,9 +10,14 @@ inputs:
   eslint_project_list:
     description: 'A list of subproject separated by comma. If it is just one project on root dir, use just one `.`'
     required: true
+  ignore_lint_errors:
+    description: 'In case of the project has many errors, turning not viable fix all now, change this value to not break the build'
+    required: false
+    default: false
   project_name:
     description: 'The name used in the spreadsheet'
     required: true
+
 outputs:
   errors:
     description: 'The number of errors in this project'
@@ -35,6 +40,7 @@ runs:
         shell: bash
 
       - name: Run eslint and send data to collector
+        continue-on-error: true
         uses: edgardleal/code-quality-to-spreadsheet-action@main
         env:
           DEBUG: 'eslint-collector*'
