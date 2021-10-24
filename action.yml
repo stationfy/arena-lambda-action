@@ -32,6 +32,7 @@ inputs:
   slack_webhook:
     required: true
 
+
 outputs:
   errors:
     description: 'The number of errors in this project'
@@ -66,8 +67,8 @@ runs:
         run: ./install.sh
         shell: bash
 
-      - name: Run eslint and send data to collector
-        continue-on-error: true
+      - name: 'Run eslint and send data to collector'
+        continue-on-error: ${{ inputs.ignore_lint_errors }}
         uses: edgardleal/code-quality-to-spreadsheet-action@main
         env:
           DEBUG: 'eslint-collector*'
