@@ -1,6 +1,12 @@
 name: 'Lambda Action'
 description: 'Validade , build and deploy AWS Lambdas'
 inputs:
+  lambda_deployment_secret:
+    required: true
+  lambda_deployment_key:
+    required: true
+  serverless_deployment_bucket:
+    required: true
   team:  # id of input
     description: 'The name of the team. egg: backend, frontend, growth'
     required: true
@@ -67,22 +73,22 @@ runs:
 
       - name: Deployment
         env:
-          SERVERLESS_DEPLOYMENT_BUCKET: ${{ secrets.SERVERLESS_DEPLOYMENT_BUCKET }} 
-          AWS_ACCESS_KEY_ID: ${{ secrets.LAMBDA_DEPLOYMENT_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.LAMBDA_DEPLOYMENT_SECRET }}
+          SERVERLESS_DEPLOYMENT_BUCKET: ${{ inputs.serverless_deployment_bucket }} 
+          AWS_ACCESS_KEY_ID: ${{ inputs.lambda_deployment_key }}
+          AWS_SECRET_ACCESS_KEY: ${{ inputs.lambda_deployment_secret }}
           BRANCH: ${{ github.ref }}
         run: ./deploy.sh
         shell: bash
 
-          #      - name: Slack Notification
-          #        if: contains(github.ref, 'master') || contains(github.ref, 'main') || contains(github.ref, 'develop')
-          #        uses: rtCamp/action-slack-notify@v2
-          #        env:
-          #          SLACK_CHANNEL: eng-releases
-          #          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          #          SLACK_ICON: https://img.icons8.com/small/452/github.png
-          #          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
-          #          SLACK_TITLE: ${{ inputs.project_name }}
-          #          SLACK_USERNAME: GithubAction
-          #          SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
-          #
+      - name: Slack Notification
+        if: contains(github.ref, 'master') || contains(github.ref, 'main') || contains(github.ref, 'develop')
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: eng-releases
+          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          SLACK_ICON: https://img.icons8.com/small/452/github.png
+          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
+          SLACK_TITLE: ${{ inputs.project_name }}
+          SLACK_USERNAME: GithubAction
+          SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
+      
