@@ -12,7 +12,7 @@ declare script_dir=$(dirname $0)
 
 cd "$script_dir"
 
-function install()
+function npm_install()
 {
   local prev_dir="$(pwd)"
   cd "$1"
@@ -20,6 +20,6 @@ function install()
   cd "$prev_dir"
 }
 
-echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 install 
+echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 npm_install 
 
 cd "$execution_dir"
