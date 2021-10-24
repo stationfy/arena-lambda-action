@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 #
 # tests.sh
 # Copyright (C) 2021 edgardleal <edgardleal@MacBook-Air-de-Edgard.local>
@@ -7,13 +7,5 @@
 #
 
 
-
-function run_tests()
-{
-  local prev_dir="$(pwd)"
-  cd "$1"
-  npm run test
-  cd "$prev_dir"
-}
-
-echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 run_tests 
+declare -r script_dir=$(dirname $0)
+echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 "$script_dir/run_tests.sh"

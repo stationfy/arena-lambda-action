@@ -6,12 +6,9 @@
 # Distributed under terms of the MIT license.
 #
 
-function install()
-{
-  local prev_dir="$(pwd)"
-  cd "$1"
-  npm install
-  cd "$prev_dir"
-}
+declare execution_dir=$(pwd)
 
-echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 install 
+declare script_dir=$(dirname $0)
+
+echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 $script_dir/npm_install.sh
+
