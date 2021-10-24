@@ -68,10 +68,10 @@ runs:
         shell: bash
 
       - name: 'Run eslint and send data to collector'
-        continue-on-error: ${{ inputs.ignore_lint_errors }}
         uses: edgardleal/code-quality-to-spreadsheet-action@main
         env:
           DEBUG: 'eslint-collector*'
+          CONTINUE_ON_ERROR: ${{ inputs.ignore_lint_errors }}
         with:
           spreadsheet_id: ${{ inputs.spreadsheet_id }}
           google_service_account_email: ${{ inputs.google_service_account_email }}
