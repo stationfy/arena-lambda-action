@@ -6,7 +6,6 @@
 # Distributed under terms of the MIT license.
 #
 
-
 declare -r prev_dir="$(pwd)"
 cd "$1"
 npm run test
