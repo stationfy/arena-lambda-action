@@ -10,8 +10,5 @@ declare execution_dir=$(pwd)
 
 declare script_dir=$(dirname $0)
 
-cd "$script_dir"
+echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 $script_dir/npm_install.sh
 
-echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 ./npm_install.sh
-
-cd "$execution_dir"
