@@ -80,15 +80,15 @@ runs:
         run: ./deploy.sh
         shell: bash
 
-      - name: Slack Notification
-        if: contains(github.ref, 'master') || contains(github.ref, 'main') || contains(github.ref, 'develop')
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: eng-releases
-          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
-          SLACK_ICON: https://img.icons8.com/small/452/github.png
-          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
-          SLACK_TITLE: ${{ inputs.project_name }}
-          SLACK_USERNAME: GithubAction
-          SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
+          # - name: Slack Notification
+          #   if: contains(github.ref, 'master') || contains(github.ref, 'main') || contains(github.ref, 'develop')
+          #   uses: rtCamp/action-slack-notify@v2
+          #   env:
+          #     SLACK_CHANNEL: eng-releases
+          #     SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          #     SLACK_ICON: https://img.icons8.com/small/452/github.png
+          #     SLACK_MESSAGE: ${{ github.event.head_commit.message }}
+          #     SLACK_TITLE: ${{ inputs.project_name }}
+          #     SLACK_USERNAME: GithubAction
+          #     SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
       
