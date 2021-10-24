@@ -20,6 +20,6 @@ function npm_install()
   cd "$prev_dir"
 }
 
-echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 npm_install 
+echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 'bash -c npm_install "{}"' 
 
 cd "$execution_dir"
