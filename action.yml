@@ -1,0 +1,93 @@
+name: 'Lambda Action'
+description: 'Validade , build and deploy AWS Lambdas'
+inputs:
+  team:  # id of input
+    description: 'The name of the team. egg: backend, frontend, growth'
+    required: true
+  env:  # id of input
+    description: 'The name of environment that this build is running'
+    required: true
+  spreadsheet_id:
+    description: 'The id of spreadsheet to send the lint data'
+    required: true
+  google_service_account_email:
+    description: 'The email for service with permission to write in the spreadsheet'
+    required: true
+  google_private_key:
+    description: 'The private key to provide access to the spreadsheet'
+    required: true
+  eslint_project_list:
+    description: 'A list of subproject separated by comma. If it is just one project on root dir, use just one `.`'
+    required: true
+  project_name:
+    description: 'The name used in the spreadsheet'
+    required: true
+outputs:
+  errors:
+    description: 'The number of errors in this project'
+    value: ${{ steps.random-number-generator.outputs.random-id }}
+
+runs:
+  using: "composite"
+  steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - name: Run npm install for the list of projects
+        env:
+          PROJECT_LIST: ${{ inputs.project_list }}
+        run: ./install.sh
+        shell: bash
+
+      - name: Run eslint and send data to collector
+        uses: edgardleal/code-quality-to-spreadsheet-action@main
+        env:
+          DEBUG: 'eslint-collector*'
+        with:
+          spreadsheet_id: ${{ inputs.spreadsheet_id }}
+          google_service_account_email: ${{ inputs.google_service_account_email }}
+          google_private_key: ${{ inputs.google_private_key }}
+          eslint_project_list: ${{ inputs.eslint_project_list }}
+          project_name: ${{ inputs.project_name }}
+
+      - name: Run tests
+        run: ./tests.sh
+        shell: bash
+
+
+      - name: DEV Deployment
+        if: contains(github.ref, 'develop')
+        env:
+          SERVERLESS_DEPLOYMENT_BUCKET: ${{ secrets.SERVERLESS_DEPLOYMENT_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.LAMBDA_DEPLOYMENT_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.LAMBDA_DEPLOYMENT_SECRET }}
+          ENV: dev
+        run: ./deploy.sh
+        shell: bash
+
+      - name: PRD Deployment
+        if: contains(github.ref, 'main') || contains(github.ref, 'master')
+        env:
+          SERVERLESS_DEPLOYMENT_BUCKET: ${{ secrets.SERVERLESS_DEPLOYMENT_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.LAMBDA_DEPLOYMENT_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.LAMBDA_DEPLOYMENT_SECRET }}
+          ENV: prd
+        run: ./deploy.sh
+        shell: bash
+
+      - name: Slack Notification
+        if: contains(github.ref, 'master') || contains(github.ref, 'main') || contains(github.ref, 'develop')
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: eng-releases
+          SLACK_COLOR: ${{ job.status }} # or a specific color like 'good' or '#ff00ff'
+          SLACK_ICON: https://img.icons8.com/small/452/github.png
+          SLACK_MESSAGE: ${{ github.event.head_commit.message }}
+          SLACK_TITLE: ${{ inputs.project_name }}
+          SLACK_USERNAME: GithubAction
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
