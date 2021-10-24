@@ -4,17 +4,8 @@ inputs:
   team:  # id of input
     description: 'The name of the team. egg: backend, frontend, growth'
     required: true
-  env:  # id of input
-    description: 'The name of environment that this build is running'
-    required: true
   spreadsheet_id:
     description: 'The id of spreadsheet to send the lint data'
-    required: true
-  google_service_account_email:
-    description: 'The email for service with permission to write in the spreadsheet'
-    required: true
-  google_private_key:
-    description: 'The private key to provide access to the spreadsheet'
     required: true
   eslint_project_list:
     description: 'A list of subproject separated by comma. If it is just one project on root dir, use just one `.`'
@@ -48,9 +39,9 @@ runs:
         env:
           DEBUG: 'eslint-collector*'
         with:
-          spreadsheet_id: ${{ inputs.spreadsheet_id }}
-          google_service_account_email: ${{ inputs.google_service_account_email }}
-          google_private_key: ${{ inputs.google_private_key }}
+          spreadsheet_id: ${{ secrets.ESLINT_COLLECTOR_SPREADSHEET_ID }}
+          google_service_account_email: ${{ secrets.ESLINT_COLLECTOR_GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          google_private_key: ${{ secrets.ESLINT_COLLECTOR_GOOGLE_PRIVATE_KEY }}
           eslint_project_list: ${{ inputs.eslint_project_list }}
           project_name: ${{ inputs.project_name }}
 
