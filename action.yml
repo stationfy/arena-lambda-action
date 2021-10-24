@@ -23,7 +23,14 @@ inputs:
   google_private_key:
     require: true
     type: string
-
+  serverless_deployment_bucket:
+    required: true
+  aws_access_key_id:
+    required: true
+  aws_secret_access_key:
+    required: true
+  slack_webhook:
+    required: true
 
 outputs:
   errors:
@@ -79,9 +86,9 @@ runs:
       - name: DEV Deployment
         if: contains(github.ref, 'develop')
         env:
-          SERVERLESS_DEPLOYMENT_BUCKET: ${{ secrets.SERVERLESS_DEPLOYMENT_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.LAMBDA_DEPLOYMENT_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.LAMBDA_DEPLOYMENT_SECRET }}
+          SERVERLESS_DEPLOYMENT_BUCKET: ${{ inputs.serverless_deployment_bucket }}
+          AWS_ACCESS_KEY_ID: ${{ inputs.lambda_deployment_key }}
+          AWS_SECRET_ACCESS_KEY: ${{ inputs.lambda_deployment_secret }}
           ENV: dev
         run: ./deploy.sh
         shell: bash
@@ -89,9 +96,9 @@ runs:
       - name: PRD Deployment
         if: contains(github.ref, 'main') || contains(github.ref, 'master')
         env:
-          SERVERLESS_DEPLOYMENT_BUCKET: ${{ secrets.SERVERLESS_DEPLOYMENT_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.LAMBDA_DEPLOYMENT_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.LAMBDA_DEPLOYMENT_SECRET }}
+          SERVERLESS_DEPLOYMENT_BUCKET: ${{ inputs.SERVERLESS_DEPLOYMENT_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ inputs.LAMBDA_DEPLOYMENT_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ inputs.LAMBDA_DEPLOYMENT_SECRET }}
           ENV: prd
         run: ./deploy.sh
         shell: bash
@@ -106,5 +113,5 @@ runs:
           SLACK_MESSAGE: ${{ github.event.head_commit.message }}
           SLACK_TITLE: ${{ inputs.project_name }}
           SLACK_USERNAME: GithubAction
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK: ${{ inputs.slack_webhook }}
 
