@@ -8,4 +8,5 @@
 
 
 
-echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 ./run_tests.sh
+declare -r script_dir=$(dirname $0)
+echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 "$script_dir/run_tests.sh"
