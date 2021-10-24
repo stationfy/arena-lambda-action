@@ -12,6 +12,22 @@ if [ -z "$ENV" ]; then
   exit 1
 fi
 
+declare env=""
+
+if [ "$BRANCH" =~ "develop" ]; then
+  env="dev"
+fi
+
+if [ "$BRANCH" =~ "main" ]; then
+  env="prd"
+fi
+if [ "$BRANCH" =~ "master" ]; then
+  env="prd"
+fi
+
+if [ -z "$env" ]; then
+  exit 0
+fi
 
 function deploy()
 {
