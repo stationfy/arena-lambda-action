@@ -6,6 +6,12 @@
 # Distributed under terms of the MIT license.
 #
 
+declare execution_dir=$(pwd)
+
+declare script_dir=$(dirname $0)
+
+cd "$script_dir"
+
 function install()
 {
   local prev_dir="$(pwd)"
@@ -15,3 +21,5 @@ function install()
 }
 
 echo "$PROJECT_LIST" | tr ',' '\n' | xargs -L 1 install 
+
+cd "$execution_dir"

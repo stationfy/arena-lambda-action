@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 #
 # tests.sh
 # Copyright (C) 2021 edgardleal <edgardleal@MacBook-Air-de-Edgard.local>

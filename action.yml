@@ -51,8 +51,8 @@ runs:
 
       - name: Run npm install for the list of projects
         env:
-          PROJECT_LIST: ${{ inputs.project_list }}
-        run: ./install.sh
+          PROJECT_LIST: "${{ inputs.project_list }}"
+        run: ${{ github.action_path }}/install.sh
         shell: bash
 
       - name: 'Run eslint and send data to collector'
