@@ -79,7 +79,7 @@ runs:
           AWS_ACCESS_KEY_ID: ${{ inputs.lambda_deployment_key }}
           AWS_SECRET_ACCESS_KEY: ${{ inputs.lambda_deployment_secret }}
           BRANCH: ${{ github.ref }}
-        run: ./deploy.sh
+        run: ${{ github.action_path }}/deploy.sh
         shell: bash
 
           # - name: Slack Notification
