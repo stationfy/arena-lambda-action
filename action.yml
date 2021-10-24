@@ -70,7 +70,7 @@ runs:
       - name: Run tests
         env:
           PROJECT_LIST: "${{ inputs.project_list }}"
-        run: .${{ github.action_path }}/tests.sh
+        run: ${{ github.action_path }}/tests.sh
         shell: bash
 
       - name: Deployment
