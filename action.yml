@@ -13,6 +13,9 @@ inputs:
   eslint_project_list:
     description: 'A list of subproject separated by comma. If it is just one project on root dir, use just one `.`'
     required: true
+  spreadsheet_id:
+    description: 'The id of the spreadsheet to send the data'
+    required: true
   ignore_lint_errors:
     description: 'In case of the project has many errors, turning not viable fix all now, change this value to not break the build'
     required: false
